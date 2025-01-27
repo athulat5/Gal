@@ -4,7 +4,11 @@ from django.contrib.auth.models import User
 
 class Customer(models.Model):
     customer=models.OneToOneField(User,on_delete=models.CASCADE)
+    def __str__(self):
+        return self.customer.username
 
 class Seller(models.Model):
      seller=models.OneToOneField(User,on_delete=models.CASCADE)
+     def __str__(self):
+        return self.seller.username
     

@@ -1,0 +1,41 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration</title>
+    <link rel="stylesheet" href="{% static 'css/sellersignup.css' %}">
+</head>
+<body>
+    <div class="form-container">
+        <h2>User Registration</h2>
+
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="message {{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+    
+            <form action="{% url 'seller_signup' %}"  method="POST">
+            {% csrf_token %}
+            <label for="username">Username</label>
+            <input type="text" name="username" id="username" value="{{ username }}" required>
+
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" value="{{ email }}" required>
+
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" required>
+
+            <label for="ConfirmPassword">Confirm Password</label>
+            <input type="password" name="ConfirmPassword" id="ConfirmPassword" required>
+
+            <button type="submit" class="btn">Register</button>
+        </form>
+    </div>
+</body>
+</html>

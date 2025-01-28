@@ -4,15 +4,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up</title>
+    <title>Seller Dashboard</title>
     <link rel="stylesheet" href="{% static 'css/sellerhome.css' %}">
 </head>
 <body>
-   
-    <form action="{% url 'sellerhome' %}"  method="POST">
+    <h1>Seller Dashboard</h1>
+    <p>You can logout here: <a href="{% url 'seller_logout' %}">Logout</a></p>
+
+    <h2>Add New Product</h2>
+    <form action="{% url 'add_product' %}" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        <h1>This is Seller Dashboard</h1>
-        <p>You can logout here <a href="{% url 'seller_logout' %}">Logout</a></p>
-        </form>
-        
+        <label for="name">Product Name:</label><br>
+        <input type="text" id="name" name="name" required><br><br>
+
+        <label for="description">Product Description:</label><br>
+        <textarea id="description" name="description" rows="4" required></textarea><br><br>
+
+        <label for="image">Product Image:</label><br>
+        <input type="file" id="image" name="image" accept="image/*" required><br><br>
+
+        <button type="submit">Add Product</button>
+    </form>
+
+    <h2>Products List</h2>
+    <ul>
+        {% for product in products %}
+        <li>
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width: 100px; height: auto;">
+            <h3>{{ product.name }}</h3>
+            <p>{{ product.description }}</p>
+        </li>
+        {% empty %}
+        <p>No products added yet.</p>
+        {% endfor %}
+    </ul>
 </body>
+</html>

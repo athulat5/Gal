@@ -6,10 +6,11 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.forms import UserCreationForm 
 from django.contrib import messages,auth
 from django.contrib.auth.forms import User
-from .models import Customer,Seller
+from .models import Customer,Seller,Product
 from django.utils.html import format_html
 from django.http import HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
+from .forms import ProductForm
 
 def user_login(request):
     if request.method == "POST":
@@ -158,7 +159,8 @@ def user(request):
 @login_required
 @seller_required
 def sellerhome(request):
-  return render(request, 'sellerhome.html')                                                                                                                                                                                                                                                                                                                         
+    products = Product.objects.all()
+    return render(request, 'sellerhome.html', {'products': products})                                                                                                                                                                                                                                                                                                                         
 
 def user_logout(request):
     logout(request)
@@ -169,3 +171,13 @@ def seller_logout(request):
     logout(request)
     messages.success(request, "You have been logged out successfully.")
     return redirect('seller_login')  
+
+def add_product(request):
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('sellerhome')
+    else:
+        form = ProductForm()
+    return render(request, 'add_product.html', {'form': form})

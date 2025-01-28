@@ -9,7 +9,7 @@
 </head>
 <body>
     <div class="login-container">
-        <h2>Login</h2>
+        <h2>Seller Login</h2>
         
             <form action="{% url 'seller_login' %}" method="POST">
             {% csrf_token %}
@@ -26,7 +26,7 @@
                 <p class="error">{{ error }}</p>
             {% endif %}
         </form>
-        <p>Don't have an account? <a href="{% url 'signup' %}">Sign Up</a></p>
+        <p>Don't have an account? <a href="{% url 'seller_signup' %}">Sign Up</a></p>
     </div>
 </body>
 </html>

@@ -20,8 +20,10 @@ def user_login(request):
             try:
                 if Customer.objects.filter(customer=user).exists():
                      return redirect('user')
-                elif Seller.objects.filter(seller=user).exists():
-                     return redirect('sellerhome')  
+                else:
+                    error_message = "Invalid credentials. Please try again."
+                    return render(request, 'login.html', {'error': error_message})
+                
             except Exception as e:
                 messages.error(request, f"An error occurred: {str(e)}")
                 return redirect('/')
@@ -32,6 +34,31 @@ def user_login(request):
 
     return render(request, 'login.html')
 
+def seller_login(request):
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            auth.login(request,user)
+            try:
+                if Seller.objects.filter(seller=user).exists():
+                     return redirect('sellerhome')  
+                else:
+                    error_message = "Invalid credentials. Please try again."
+                    return render(request, 'sellerlog.html', {'error': error_message})
+
+                
+            except Exception as e:
+                messages.error(request, f"An error occurred: {str(e)}")
+                return redirect('/')
+ 
+        else:
+            error_message = "Invalid credentials. Please try again."
+            return render(request, 'sellerlog.html', {'error': error_message})
+
+    return render(request, 'sellerlog.html')
 
 def signup(request):
 
@@ -110,7 +137,6 @@ def sellerhome(request):
    
   return render(request, 'sellerhome.html')                                                                                                                                                                                                                                                                                                                         
 
-def seller(request):
-    return redirect('seller_login')
+
  
 

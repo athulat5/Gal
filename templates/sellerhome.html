@@ -6,37 +6,146 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seller Dashboard</title>
     <link rel="stylesheet" href="{% static 'css/sellerhome.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+        
+        h1 {
+            margin: 0;
+        }
+        
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+        
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        form label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        form input[type="text"],
+        form textarea,
+        form input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        
+        form button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        form button:hover {
+            background-color: #45a049;
+        }
+        
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        ul li {
+            background: white;
+            margin: 10px 0;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+        }
+        
+        ul li img {
+            max-width: 100px;
+            height: auto;
+            margin-right: 20px;
+        }
+        
+        ul li h3 {
+            margin: 0;
+            font-size: 1.2em;
+        }
+        
+        ul li p {
+            margin: 0;
+            color: #666;
+        }
+        
+        a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+    </style>
 </head>
 <body>
-    <h1>Seller Dashboard</h1>
-    <p>You can logout here: <a href="{% url 'seller_logout' %}">Logout</a></p>
-
-    <h2>Add New Product</h2>
-    <form action="{% url 'add_product' %}" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <label for="name">Product Name:</label><br>
-        <input type="text" id="name" name="name" required><br><br>
-
-        <label for="description">Product Description:</label><br>
-        <textarea id="description" name="description" rows="4" required></textarea><br><br>
-
-        <label for="image">Product Image:</label><br>
-        <input type="file" id="image" name="image" accept="image/*" required><br><br>
-
-        <button type="submit">Add Product</button>
-    </form>
-
-    <h2>Products List</h2>
-    <ul>
-        {% for product in products %}
-        <li>
-            <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width: 100px; height: auto;">
-            <h3>{{ product.name }}</h3>
-            <p>{{ product.description }}</p>
-        </li>
-        {% empty %}
-        <p>No products added yet.</p>
-        {% endfor %}
-    </ul>
-</body>
-</html>
+    <header>
+        <h1>Seller Dashboard</h1>
+    </header>
+    <div class="container">
+        <p>You can logout here: <a href="{% url 'seller_logout' %}">Logout</a></p>
+    
+        <h2>Add New Product</h2>
+        <form action="{% url 'add_product' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="name">Product Name:</label>
+            <input type="text" id="name" name="name" required>
+    
+            <label for="description">Product Description:</label>
+            <textarea id="description" name="description" rows="4" required></textarea>
+    
+            <label for="image">Product Image:</label>
+            <input type="file" id="image" name="image" accept="image/*" required>
+    
+            <button type="submit">Add Product</button>
+        </form>
+    
+        <h2>Products List</h2>
+        <ul>
+            {% for product in products %}
+            <li>
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                <div>
+                    <h3>{{ product.name }}</h3>
+                    <p>{{ product.description }}</p>
+                </div>
+            </li>
+            {% empty %}
+            <p>No products added yet.</p>
+            {% endfor %}
+        </ul>
+    </div>
+    </body>
+    </html>

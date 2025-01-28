@@ -155,7 +155,9 @@ def seller_signup(request):
 @login_required
 @customer_required
 def user(request):
-    return render(request, 'user.html')  
+    products = Product.objects.all()
+    return render(request, 'user.html', {'products': products}) 
+   
 @login_required
 @seller_required
 def sellerhome(request):

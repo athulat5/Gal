@@ -11,8 +11,8 @@
    
     <form action="{% url 'sellerhome' %}"  method="POST">
         {% csrf_token %}
-        <h1>Seller Dashboard</h1>
-      
+        <h1>This is Seller Dashboard</h1>
+        <p>You can logout here <a href="{% url 'seller_logout' %}">Logout</a></p>
         </form>
         
 </body>

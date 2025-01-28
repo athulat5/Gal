@@ -5,7 +5,7 @@ Password- password
 
 Customer 
 
-Username- stephy
+Username- jaison
 Password- password
 
 Seller

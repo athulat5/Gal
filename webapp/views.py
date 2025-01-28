@@ -1,13 +1,15 @@
 
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.forms import UserCreationForm 
 from django.contrib import messages,auth
 from django.contrib.auth.forms import User
 from .models import Customer,Seller
 from django.utils.html import format_html
+from django.http import HttpResponseForbidden
+from django.contrib.auth.decorators import login_required
 
 def user_login(request):
     if request.method == "POST":
@@ -61,7 +63,7 @@ def seller_login(request):
     return render(request, 'sellerlog.html')
 
 def signup(request):
-
+    
     if request.method == 'POST':
         username = request.POST.get('username')
         email = request.POST.get('email')
@@ -95,9 +97,25 @@ def signup(request):
 
     return render(request, 'signup.html')
 
+def customer_required(view_func):
+    def wrapper(request, *args, **kwargs):
+        if request.user.is_authenticated:
+            if Customer.objects.filter(customer=request.user).exists():
+                return view_func(request, *args, **kwargs)
+            return HttpResponseForbidden("You are not authorized to access this page.")
+        return redirect('login')  # Redirect to login if not authenticated
+    return wrapper
 
-def user(request):
-    return render(request, 'user.html')  
+def seller_required(view_func):
+    def wrapper(request, *args, **kwargs):
+        if request.user.is_authenticated:
+            if Seller.objects.filter(seller=request.user).exists():
+                return view_func(request, *args, **kwargs)
+            return HttpResponseForbidden("You are not authorized to access this page.")
+        return redirect('sellerlogin')  # Redirect to login if not authenticated
+    return wrapper
+
+
 
 
 def seller_signup(request):
@@ -133,10 +151,21 @@ def seller_signup(request):
 
     return render(request, 'sellerreg.html')
 
+@login_required
+@customer_required
+def user(request):
+    return render(request, 'user.html')  
+@login_required
+@seller_required
 def sellerhome(request):
-   
   return render(request, 'sellerhome.html')                                                                                                                                                                                                                                                                                                                         
 
-
+def user_logout(request):
+    logout(request)
+    messages.success(request, "You have been logged out successfully.")
+    return redirect('user_login') 
  
-
+def seller_logout(request):
+    logout(request)
+    messages.success(request, "You have been logged out successfully.")
+    return redirect('seller_login')  

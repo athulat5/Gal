@@ -9,7 +9,7 @@
 </head>
 <body>
     <div class="login-container">
-        <h2>Login</h2>
+        <h2>User Login</h2>
         
             <form action="{% url 'user_login' %}" method="POST">
             {% csrf_token %}
@@ -27,6 +27,7 @@
             {% endif %}
         </form>
         <p>Don't have an account? <a href="{% url 'signup' %}">Sign Up</a></p>
+        <p>Seller <a href="{% url 'seller_login' %}">Login</a></p>
     </div>
 </body>
 </html>

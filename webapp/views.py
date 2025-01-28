@@ -6,11 +6,12 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.forms import UserCreationForm 
 from django.contrib import messages,auth
 from django.contrib.auth.forms import User
-from .models import Customer,Seller,Product
+from .models import Customer,Seller,Product, Cart
 from django.utils.html import format_html
 from django.http import HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
 from .forms import ProductForm
+from django.shortcuts import get_object_or_404
 
 def user_login(request):
     if request.method == "POST":
@@ -183,3 +184,53 @@ def add_product(request):
     else:
         form = ProductForm()
     return render(request, 'add_product.html', {'form': form})
+
+
+
+def cart_view(request):
+    cart = Cart.objects.filter(user=request.user).first() 
+    products = cart.products.all() if cart else []  
+    return render(request, 'cart.html', {'products': products})
+
+
+def add_to_cart(request, product_id):
+    if request.method == "POST":
+        product = get_object_or_404(Product, id=product_id)
+        cart, created = Cart.objects.get_or_create(user=request.user)
+
+        # Check if the product is already in the cart
+        if product in cart.products.all():
+            return JsonResponse({"message": f"{product.name} is already in your cart."})
+        
+        # Add product to cart
+        cart.products.add(product)
+        return JsonResponse({"message": f"{product.name} added to cart!"})
+    else:
+        return JsonResponse({"error": "Invalid request method."}, status=400)
+
+@login_required
+def remove_from_cart(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    cart = get_object_or_404(Cart, user=request.user)
+    cart.products.remove(product)
+
+    return redirect('cart_view')
+
+@login_required
+def remove_product(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    product.delete()
+    return redirect('sellerhome')
+
+def edit_product(request, id):
+    product = get_object_or_404(Product, id=id)
+    
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES, instance=product)
+        if form.is_valid():
+            form.save()
+            return redirect('sellerhome') 
+    else:
+        form = ProductForm(instance=product)
+
+    return render(request, 'edit_product.html', {'form': form, 'product': product})

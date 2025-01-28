@@ -1,0 +1,150 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Product</title>
+    <link rel="stylesheet" href="{% static 'css/sellerhome.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+        
+        h1 {
+            margin: 0;
+        }
+        
+        .container {
+            width: 60%;
+            margin: auto;
+            overflow: hidden;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        form label {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        form input[type="text"],
+        form input[type="number"],
+        form textarea,
+        form input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        form input[type="file"] {
+            padding: 8px;
+        }
+
+        form textarea {
+            resize: vertical;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .cancel-btn {
+            background-color: #f44336;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .cancel-btn:hover {
+            background-color: #e53935;
+        }
+
+        .product-image-preview {
+            width: 100%;
+            height: auto;
+            max-width: 200px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Edit Product</h1>
+    </header>
+    <div class="container">
+        <h2>Editing: {{ product.name }}</h2>
+        <form action="{% url 'edit_product' product.id %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <label for="name">Product Name:</label>
+            <input type="text" id="name" name="name" value="{{ product.name }}" required>
+
+            <label for="description">Product Description:</label>
+            <textarea id="description" name="description" rows="4" required>{{ product.description }}</textarea>
+
+            <label for="image">Product Image:</label>
+            <input type="file" id="image" name="image" accept="image/*">
+
+            {% if product.image %}
+                <div>
+                    <p>Current Image:</p>
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image-preview">
+                </div>
+            {% endif %}
+
+            <label for="price">Product Price:</label>
+            <input type="number" id="price" name="price" value="{{ product.price }}" required step="0.01">
+
+            <button type="submit">Save Changes</button>
+        </form>
+
+        <a href="{% url 'sellerhome' %}" class="cancel-btn">Cancel</a>
+    </div>
+</body>
+</html>
